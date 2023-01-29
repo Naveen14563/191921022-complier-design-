@@ -1,21 +1,22 @@
-include<stdio.h>
+%{
+int tags;
 %}
-
 %%
-\<[^>]*\> fprintf(yyout,"%s\n",yytext);
-.|\n;
- 
+"<"[^>]*> { tags++; printf("%s \n", yytext); }
+.|\n { }
 %%
-
-int yywrap()
+int yywrap(void) {
+return 1; }
+int main(void)
 {
-return 1;
-}
-
-int main()
-{
-yyin=fopen("sample.html","r");
-yyout=fopen("output.txt","w");
+FILE *f;
+char file[10];
+printf("Enter File Name : ");
+scanf("%s",file);
+f = fopen(file,"r");
+yyin = f;
 yylex();
-return 0;
+printf("\n Number of html tags: %d",tags);
+fclose(yyin);
 }
+
